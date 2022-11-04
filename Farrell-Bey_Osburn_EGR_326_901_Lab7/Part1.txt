@@ -1,0 +1,205 @@
+/**************************************************************************************
+ * Title: Farrell-Bey_KeJuan_EGR_326_901_Lab2
+ * Filename: main.c
+ * Author: KeJuan Farrell-Bey & Jonathan Osburn
+ * Course: EGR 326-901
+ * Date: 9/2/2022
+ * Assignment: Lab # 2:
+ * Instructor: Dr. Brian Krug
+ *
+ * This program is toggle an external LED continuosly if button 1 is pressed and held the RGB
+ *           LED will cycle and blink every second.
+ * Revision: Initial draft
+ *****************************  Pins   **************************************************/
+
+#include "msp.h"
+#include <stdio.h>
+#include <stdbool.h>
+
+// Marcos for RGB light pins & buttons machine
+#define INT1 BIT4 // P8.4
+#define INT2 BIT5 // P8.5
+#define INT3 BIT6 // P8.6
+#define INT4 BIT7 // P8.7
+
+#define BUTTON1 BIT6 // Pin 6 (Button 1)
+#define BUTTON2 BIT7 // Pin 7 (Button 2)
+#define MAXLEDS 3	 // Maximum number of LED
+
+uint16_t Button1Press(void); // Function to Debounce a press on button 1 (2.6)
+void FullStep_Motor(int phase);
+void Motor_Pin_Init(void);
+void Button_init(void);	 // Initializes Buttons Pins 6 & 7 (Push Buttons) void LED_init(void);               // Initializes RGB LEDs Pin 0, 1, & 2
+void SysTick_Init(void); // Initializes the SysTick Timer w/ Interrupts
+void ms_delay(uint16_t delay);
+
+uint16_t i, j = 0;
+int k = 3;
+bool oddPress = false;
+
+void main(void)
+{
+	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD; // stop watchdog timer
+
+	SysTick_Init();
+	Button_init();
+	Motor_Pin_Init(); // initialize pins for the motor
+
+	while (1)
+	{
+		if (Button1Press())
+		{
+			// While button 1 is being held
+			oddPress = !oddPress;
+
+			if (oddPress)
+			{
+				for (j = 0; j < 5; j++)
+				{
+					// repeat 5 times (5*4 = 20)
+					for (i = 0; i < 4; i++)
+					{ // go 4 steps forward
+						FullStep_Motor(i);
+					}
+				}
+			}
+
+			else
+			{
+				for (j = 0; j < 5; j++)
+				{
+					// repeat 5 times (5*4 = 20)
+					for (i = 0; i < 4; i++)
+					{ // go 4 steps forward
+						FullStep_Motor(i);
+					}
+				}
+			}
+			while ((P2->IN & BUTTON1) == 0)
+				;
+		}
+	}
+}
+
+/********************************************************************
+This function detects a button press and debounces the button bounce
+by shifting 1 into the state variable until the debounce signal passes
+through which send a string of 0 into the variable which is followed by
+another nibble of 1s.
+*********************************************************************/
+uint16_t Button1Press(void)
+{							   // Switch1 on Port P2.6
+	static uint16_t State = 0; // State of switch
+
+	State = (State << 1) | ((P2->IN & BUTTON1) >> 1) | 0xfc00;
+	if (State == 0xfc00)
+	{
+		return 1;
+	}
+
+	return 0;
+}
+
+void FullStep_Motor(int phase)
+{
+	if (oddPress)
+	{
+		switch (phase)
+		{
+		case 0:
+			P8->OUT |= (INT1 | INT3); // only turn on needed pins
+            ms_delay(30);
+			P8->OUT &= ~(INT1);		  // turn everything Turn off previous phase
+			break;
+		case 1:
+			P8->OUT |= (INT2 | INT3); // only turn on needed pins
+            ms_delay(30);
+			P8->OUT &= ~(INT3);		  // turn everything off
+			break;
+		case 2:
+			P8->OUT |= (INT2 | INT4); // only turn on needed pins
+            ms_delay(30);
+			P8->OUT &= ~(INT2);		  // turn everything off
+			break;
+		case 3:
+			P8->OUT |= (INT4 | INT1); // only turn on needed pins
+            ms_delay(30);
+			P8->OUT &= ~(INT4);		  // turn everything off
+			break;
+		default:
+			break;
+		}
+	}
+
+	else
+	{
+		switch (phase)
+		{
+		case 0:
+			P8->OUT |= (INT1 | INT4); // only turn on needed pins
+			ms_delay(30);
+			P8->OUT &= ~(INT1);		  // turn everything Turn off previous phase
+			break;
+		case 1:
+			P8->OUT |= (INT2 | INT4); // only turn on needed pins
+			ms_delay(30);
+			P8->OUT &= ~(INT4);		  // turn everything off
+			break;
+		case 2:
+			P8->OUT |= (INT2 | INT3); // only turn on needed pins
+			ms_delay(30);
+			P8->OUT &= ~(INT2);		  // turn everything off
+			break;
+		case 3:
+			P8->OUT |= (INT3 | INT1); // only turn on needed pins
+			ms_delay(30);
+			P8->OUT &= ~(INT3);		  // turn everything off
+			break;
+		default:
+			break;
+		}
+	}
+}
+
+void Motor_Pin_Init(void)
+{
+	P8->SEL0 &= ~(INT1 | INT2 | INT3 | INT4);
+	P8->SEL1 &= ~(INT1 | INT2 | INT3 | INT4); // GPIO
+	P8->DIR |= (INT1 | INT2 | INT3 | INT4);	  // Set as outputs
+
+	P8->OUT &= ~(INT3 | INT4); // Start all as off
+	P8->OUT |= (INT1 | INT2);
+}
+
+/********************************************************************
+This function initalizes pins 6 & 7 on port 2 as input GPIO to recieve
+input from a button switch.
+*********************************************************************/
+void Button_init(void)
+{
+	P2->SEL0 &= ~(BUTTON1 | BUTTON2);
+	P2->SEL1 &= ~(BUTTON1 | BUTTON2); // configure P2.6 and P2.7 as GPIO
+	P2->DIR &= ~(BUTTON1 | BUTTON2);  // make P2.6 and P2.7 input
+	P2->REN |= (BUTTON1 | BUTTON2);	  // enable pull resistors
+	P2->OUT |= (BUTTON1 | BUTTON2);	  // Pins are pull-up
+}
+
+/********************************************************************
+This function initializes the SysTick Timer with interrupts at 1
+second intervals.
+*********************************************************************/
+void SysTick_Init(void)
+{								// Initialization of systic timer
+	SysTick->CTRL = 0;			// disable SysTick During step
+	SysTick->LOAD = 0x00FFFFFF; // max reload value
+	SysTick->VAL = 0;			// any write to current clears it
+	SysTick->CTRL = 0x00000005; // enable systic, 3MHz, No Interrupts
+}
+
+void ms_delay(uint16_t delay)
+{										  // Systick delay function
+	SysTick->LOAD = ((delay * 3000) - 1); // delay for 1 msecond per delay value
+	SysTick->VAL = 0;					  // any write to CVR clears it
+	while ((SysTick->CTRL & 0x00010000) == 0)
+		; // wait for flag to be SET
+}

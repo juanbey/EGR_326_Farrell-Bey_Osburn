@@ -1,0 +1,291 @@
+#include "msp.h"
+#include "stdio.h"
+#include "keypad.h"
+
+/**
+ * main.c
+ */
+
+int validNum(int top, int bottom, int num);
+
+void reset();
+
+void I2C1_init(void);
+
+int I2C1_burstWrite(int slaveAddr, unsigned char memAddr, int byteCount, unsigned char* data);
+
+int I2C1_burstRead(int slaveAddr, unsigned char memAddr, int byteCount, unsigned char* data);
+
+#define SLAVE_ADDR 0b1101000 // 1101000. DS1337
+
+void main(void)
+{
+    int c1=0, c2=0, c3=0, c4=0, c5=0, c6=0, c7=0, c8=0, c9=0, c10=0, c11=0, c12=0, c13=0;
+    int mont = -1;
+    int mono = -1;
+    int month = 0;
+    int dayt = -1;
+    int dayo = -1;
+    int yeart = -1;
+    int yearo = -1;
+    int weekDay = -1;
+    int hourt = -1;
+    int houro = -1;
+    int mint = -1;
+    int mino = -1;
+    int sect = -1;
+    int seco = -1;
+
+    int press = -1;
+
+    unsigned char timeDateToRead[15];
+
+	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;		// stop watchdog timer
+
+	I2C1_init();
+
+    printf("Please enter the date in the following format, mm/dd/yy.\n");
+
+    while (c1 == 0){
+        mont = ReadKeyPad();
+        c1 = validNum(1, 0, mont);
+    }
+    printf("%d\n", mont);
+
+    while (c2 == 0){
+        mono = ReadKeyPad();
+        if(mont == 0){
+            c2 = validNum(9, 1, mono);
+        }
+        else if (mont == 1){
+            c2 = validNum(2, 0, mono);
+        }
+    }
+    printf("%d/\n", mono);
+
+    month = mont*10 + mono;
+
+//------------------------------------------------------------------------------------------------ Day
+
+    while (c3 == 0){
+        dayt = ReadKeyPad();
+        if(month == 2){
+            c3 = validNum(2, 0, dayt);
+        }
+        else{
+            c3 = validNum(3, 0, dayt);
+        }
+    }
+    printf("%d\n", dayt);
+
+    while (c4 == 0){
+
+        dayo = ReadKeyPad();
+
+        if(dayt == 0){
+            c4 = validNum(9, 1, dayo);
+        }
+        else if (dayt == 1){
+            c4 = validNum(9, 0, dayo);
+        }
+        else if (dayt == 2){
+            if(month == 2){
+                c4 = validNum(8, 0, dayo);
+            }
+            else{
+                c4 = validNum(9, 0, dayo);
+            }
+        }
+        else if (dayt == 3){
+            c4 = validNum(1, 0, dayo);
+        }
+    }
+
+    printf("%d/\n", dayo);
+
+
+//------------------------------------------------------------------------------------------------ year
+
+    while (c5 == 0){
+        yeart = ReadKeyPad();
+        c5 = validNum(9, 0, yeart);
+    }
+    printf("%d\n", yeart);
+
+    while (c6 == 0){
+        yearo = ReadKeyPad();
+        c6 = validNum(9, 0, yearo);
+    }
+
+    printf("%d\n", yearo);
+
+//-----------------------------------------------------------------------------------------------------Day of Week
+    printf("Now please enter the day of the week as a number, 1 being Sunday.\n");
+
+    while (c7 == 0){
+        weekDay = ReadKeyPad();
+        c7 = validNum(7, 1, weekDay);
+    }
+
+    printf("%d\n", weekDay);
+//------------------------------------------------------------------------------------------------------Hours
+    printf("Lastly, please enter the time in hh:mm:ss form with hours being 0 to 23.\n");
+
+    while (c8 == 0){
+        hourt = ReadKeyPad();
+        c8 = validNum(2, 0, hourt);
+    }
+    printf("%d\n", hourt);
+
+    while (c9 == 0){
+        houro = ReadKeyPad();
+        if(hourt == 0){
+            c9 = validNum(9, 0, houro);
+        }
+        else if (hourt == 1){
+            c9 = validNum(9, 0, houro);
+        }
+        else if (hourt == 2){
+            c9 = validNum(3, 0, houro);
+        }
+    }
+    printf("%d:\n", houro);
+
+//---------------------------------------------------------Minutes
+    while (c10 == 0){
+        mint = ReadKeyPad();
+        c10 = validNum(5, 0, mint);
+    }
+    printf("%d\n", mint);
+
+    while (c11 == 0){
+        mino = ReadKeyPad();
+        c11 = validNum(9, 0, mino);
+    }
+    printf("%d:\n", mino);
+//---------------------------------------------------------Days
+    while (c12 == 0){
+        sect = ReadKeyPad();
+        c12 = validNum(5, 0, sect);
+    }
+    printf("%d\n", sect);
+
+    while (c13 == 0){
+        seco = ReadKeyPad();
+        c13 = validNum(9, 0, seco);
+    }
+    printf("%d\n", seco);
+
+
+    unsigned char hexMonth = (mont*16) + mono;
+    unsigned char hexDay = (dayt*16) + dayo;
+    unsigned char hexYear = (yeart*16) + yearo;
+
+    unsigned char hexDOW = weekDay;
+
+    unsigned char hexHour = (hourt*16) + houro;
+    unsigned char hexMin = (mint*16) + mino;
+    unsigned char hexSec = (sect*16) + seco;
+
+    unsigned char timeDateToSet[15] = {hexSec, hexMin, hexHour, hexDOW, hexDay, hexMonth, hexYear, 0};
+
+    I2C1_burstWrite(SLAVE_ADDR, 0, 7, timeDateToSet);
+
+    while(1){
+        press = -1;
+
+        press = ReadKeyPad();
+
+        if(press == 10){
+
+            I2C1_burstRead(SLAVE_ADDR, 0, 7, timeDateToRead);
+            printf("%u", timeDateToRead[1]);
+        }
+    }
+
+}
+
+int validNum(int top, int bottom, int num){
+    if ((num >= bottom) && (num <= top)){
+        return 1;
+    }
+    else{
+        return 0;
+    }
+}
+void I2C1_init(void){
+    EUSCI_B1->CTLW0 |= 1; // disable UCBI during config
+
+    EUSCI_B1->CTLW0 = 0x0F81; // 7-bit slave addr, master, I2C, synch mode, use SMCLK
+    EUSCI_B1->BRW = 30;
+    P1->SEL0 |= 0x30;       // 0011 0000   P1.5, P1.6
+    P1->SEL1 &= ~0x30;
+    EUSCI_B1->CTLW0 &= ~1;
+}
+
+//
+int I2C1_burstWrite(int slaveAddr, unsigned char memAddr, int byteCount, unsigned char* data){
+
+    if (byteCount <= 0){  //no write was performed
+        return -1;
+    }
+
+    EUSCI_B1->I2CSA = slaveAddr;  // setup slave address
+    EUSCI_B1->CTLW0 |= 0x0010;    // enable transmitter
+    EUSCI_B1->CTLW0 |= 0x0002;     // generate START and send slave address
+
+    while (!(EUSCI_B1->IFG & 2)); // wait till it's ready to transmit
+
+    EUSCI_B1->TXBUF = memAddr;    // send memory address to slave
+
+    // send data one byte at a time
+    do{
+        while (!(EUSCI_B1->IFG & 2));  // wait till it's ready to transmit
+        EUSCI_B1->TXBUF = *data++;      // send data to slave
+        byteCount--;
+    } while (byteCount > 0);
+
+    while (!(EUSCI_B1->IFG & 2));       // wait till last transmit is done
+    EUSCI_B1->CTLW0 |= 0x0004;          // send STOP
+    while (EUSCI_B1->CTLW0 & 4);        // wait until STOP is sent */
+
+    return 0;
+}
+
+//
+int I2C1_burstRead(int slaveAddr, unsigned char memAddr, int byteCount, unsigned char* data){
+
+    if (byteCount <= 0){  //no write was performed
+        return -1;
+    }
+
+    EUSCI_B1->I2CSA = slaveAddr;  // setup slave address
+    EUSCI_B1->CTLW0 |= 0x0010;    // enable transmitter
+    EUSCI_B1->CTLW0 |= 0x0002;     // generate START and send slave address
+
+    while (EUSCI_B1->CTLW0 & 2); // wait till it's ready to transmit
+
+    EUSCI_B1->TXBUF = memAddr;    // send memory address to slave
+
+    while (!(EUSCI_B1->IFG & 2));  // wait till it's ready
+
+    EUSCI_B1->CTLW0 &= ~0x0010;    // enable transmitter
+    EUSCI_B1->CTLW0 |= 0x0002;     // generate START and send slave address
+
+    while (EUSCI_B1->CTLW0 & 2);   // wait till it's ready
+
+    // send data one byte at a time
+    do{
+        if(byteCount == 1){
+            EUSCI_B1->CTLW0 |= 0x0004;
+        }
+
+        while (!(EUSCI_B1->IFG & 1));  // wait till it's ready to transmit
+        *data++ = EUSCI_B1->RXBUF;      // send data to slave
+        byteCount--;
+    } while (byteCount);
+
+    while (EUSCI_B1->CTLW0 & 4);       // wait till last transmit is done
+
+    return 0;
+}

@@ -1,0 +1,74 @@
+/**************************************************************************************
+ * Title: Farrell-Bey_KeJuan_EGR_326_901_Lab2
+ * Filename: main.c
+ * Author: KeJuan Farrell-Bey & Jonathan Osburn
+ * Course: EGR 326-901
+ * Date: 9/2/2022
+ * Assignment: Lab # 2:
+ * Instructor: Dr. Brian Krug
+ *
+ * This program is toggle an external LED continuosly if button 1 is pressed and held the RGB
+ *           LED will cycle and blink every second.
+ * Revision: Initial draft
+ *****************************  Pins   **************************************************/
+
+#include "msp.h"
+
+#define SLAVE_ADDRESS 0x48
+#define S1 BIT4
+
+char TXData[10] = "RGBBGRBGGR";
+
+int i = 0;
+
+void main(void)
+{
+	WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;
+
+	P1->DIR &=~S1;
+	P1->REN = S1;
+	P1->OUT = S1;
+
+	P1->IE = S1;
+	P1->IES = S1;
+	P1->IFG = 0x00;
+
+	P6->SEL0 |= BIT4 | BIT5;				// P1.6 and P1.7 as UCB0SDA and UCB0SCL	//TODO:change to 6.4 SDA and 6.5 SCL
+	EUSCI_B1->CTLW0 |= EUSCI_B_CTLW0_SWRST; // Hold EUSCI_B1 module in reset state
+	EUSCI_B1->CTLW0 |= EUSCI_B_CTLW0_MODE_3 | EUSCI_B_CTLW0_MST | EUSCI_B_CTLW0_SYNC;
+	EUSCI_B1->CTLW0 |= EUSCI_B_CTLW0_UCSSEL_2; // Select SMCLK as EUSCI_B1 clock
+	EUSCI_B1->BRW = 0x001E;					   // Set BITCLK = BRCLK / (UCBRx+1) = 3 MHz / 30 = 100 kHz
+	EUSCI_B1->I2CSA = SLAVE_ADDRESS;
+	EUSCI_B1->CTLW0 &= ~EUSCI_B_CTLW0_SWRST;		// Clear SWRST to resume operation
+	NVIC->ISER[1] = 0x00000008;						// Port P1 interrupt is enabled in NVIC
+	NVIC->ISER[0] = 1 << ((EUSCIB1_IRQn)&31); // EUSCI_B1 interrupt is enabled in NVIC
+	__enable_irq();									// All interrupts are enabled
+
+	while (EUSCI_B1->CTLW0 & EUSCI_B_CTLW0_TXSTP)
+		;
+
+	EUSCI_B1->CTLW0 |= EUSCI_B_CTLW0_TR | EUSCI_B_CTLW0_TXSTT;
+	SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk; // Sleep on exit
+	__sleep();							 // enter LPM0
+}
+
+void EUSCIB1_IRQHandler(void)
+{
+	uint32_t status = EUSCI_B1->IFG;
+	EUSCI_B1->IFG &= ~EUSCI_B_IFG_TXIFG0;
+
+	if (status & EUSCI_B_IFG_TXIFG0)
+	{
+
+		EUSCI_B1->TXBUF = TXData[i++ % 10];
+		EUSCI_B1->IE &= ~EUSCI_B_IE_TXIE0;
+	}
+}
+
+void PORT1_IRQHandler(void)
+{
+	uint32_t status = P1->IFG;
+	P1->IFG &= ~S1;
+	if (status & S1)
+		EUSCI_B1->IE |= EUSCI_B_IE_TXIE0;
+}

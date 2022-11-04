@@ -1,0 +1,218 @@
+/**************************************************************************************
+* Title: Farrell-Bey_KeJuan_EGR_326_901_Lab4
+* Filename: maincm
+* Author: KeJuan Farrell-Bey & Jonathan Osburn
+* Course: EGR 326-901
+* Date: 9/22/2022
+* Assignment: Lab # 4: I/O Interfacing with the MSP432
+* Instructor: Dr. Brian Krug
+*
+* Description
+*
+* Revision: Initial draft
+***************************************************************************************/
+#include "msp.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+// Pin macros
+
+#define SW BIT0     // P4.0
+#define DT BIT1     // P4.1
+#define CLK BIT2    // P4.2
+#define RED BIT6    // P4.3
+#define PERIOD 9398        // Trigger Period
+
+// Jay's Pin macros
+// #define SW BIT0     // P4.0
+// #define DT BIT1     // P4.1
+// #define CLK BIT5    // P4.5
+// #define RED BIT3    // P4.3
+
+void Decade_Init(void);         // prototype for GPIO initialization
+void SysTick_Init(void);
+void LED_init(void);
+void SysTick_delay (uint16_t delay);
+void TimerA_init(void);
+void LED_PWM(void);
+void disp_vals(void);
+
+
+volatile uint32_t cw, ccw = 0;
+volatile int32_t count, pCount = 0;
+volatile bool pressed = false;
+void main(void)
+{
+    WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
+
+    Decade_Init();
+    LED_init();
+    TimerA_init();
+
+    while(1){
+        if(pressed) {
+           disp_vals();
+           pressed = false;
+       }
+        LED_PWM();
+    }
+}
+
+
+
+
+
+/********************************************************************
+Interrupt Serivce Ruoutine for port 2 that sets the tryDebounce flag(s)
+*********************************************************************/
+void PORT5_IRQHandler(void){
+    if(P5->IFG & CLK){                  // if CLk interrupt occurs
+        if((P5->IN & CLK) == (P5->IN & DT)){    //If inputs are equal
+            if(count <= 0) {                   // low-cap count at min of 0
+                count = 0;
+            }
+            else
+                count--;
+                ccw++;
+        }
+        else{                                   //If inputs are not equal
+            if(count >= 20) {                   // cap count at max of 20
+                count = 20;
+            }
+            else
+                count++;
+                cw++;
+        }
+
+        P5->IES ^= (CLK | DT);      // Set pin interrupt trigger low to high
+    }
+
+    else if(P5->IFG & DT){                  // if DT interrupt occurs
+        if((P5->IN & CLK) == (P5->IN & DT)){    //If inputs are equal
+            if(count >= 20) {                   // cap count at max of 20
+                count = 20;
+            }
+            else
+                count++;
+                cw++;
+        }
+        else{                                   //If inputs are not equal
+            if(count <= 0) {                   // low-cap count at min of 0
+                count = 0;
+            }
+            else
+                count--;
+                ccw++;
+        }
+
+    P5->IES ^= (DT | CLK);      // Set pin interrupt trigger low to high
+    }
+
+    else{
+        ;
+    }
+
+
+    if (P5->IFG & SW){
+        pressed = true;
+    }
+
+    P5->IFG = 0;       //clear flag
+}
+
+/********************************************************************
+This function initalizes pins 6 & 7 on port 2 as input GPIO to recieve
+input from a button switch.
+*********************************************************************/
+void Decade_Init(void){
+    P5->SEL0 &= ~(DT | CLK | SW);
+    P5->SEL1 &= ~(DT | CLK | SW);   //configure P2.6 and P2.7 as GPIO
+    P5->DIR &= ~(DT | CLK | SW);    //make P2.6 and P2.7 input
+    P5->DIR |= (RED);    //make P2.6 and P2.7 output
+
+    P5->REN |= (DT | CLK | SW);     //enable pull resistors
+    P5->OUT |= (DT | CLK | SW);     //Pins are pull-up
+
+    P5->REN &= ~(RED);     //enable pull resistors
+    P5->OUT &= ~(RED);  //Off
+    P5->IES |= (DT | CLK | SW);     //Set pin interrupt trigger from high to low
+
+    P5->IFG = 0;
+
+    P5->IE |= (DT | CLK | SW);       //Set interrupts
+
+    NVIC_EnableIRQ(PORT5_IRQn); //Enable interrupts on port 1
+    __enable_interrupts();
+}
+/********************************************************************
+This function sets up 3 pins to work with TimerA
+*********************************************************************/
+void LED_init(void){
+    P5->SEL0 |= (RED);
+    P5->SEL1 &= ~(RED);     //configure P5.6 for TimerA2.2
+    P5->DIR |= (RED);       //make P5.6 an output
+    P5->REN &= ~(RED);     //enable down resistors
+    P5->OUT &= ~(RED);      //Off
+}
+
+void SysTick_Init (void){        //initialization of systic timer
+    SysTick -> CTRL  = 0;                      // disable SysTick During step
+    SysTick -> LOAD = 0x00FFFFFF;             // max reload value
+    SysTick -> VAL     = 0;                  // any write to current clears it
+    SysTick -> CTRL  = 0x00000005;          // enable systic, 3MHz, No Interrupts
+  }
+
+
+void SysTick_delay (uint16_t delay){          // Systick delay function
+    SysTick -> LOAD = ((delay * 3000) - 1);               //delay for 1 msecond per delay value
+    SysTick -> VAL     = 0;                              // any write to CVR clears it
+    while ( (SysTick -> CTRL  &  0x00010000) == 0);    // wait for flag to be SET
+}
+void disp_vals(void){
+    printf("Cumulative pulse count: %d ", abs(cw - ccw));
+    if(cw > ccw)
+        printf("CW\n");
+    else if (ccw > cw)
+        printf("CCW\n");
+    else
+        printf("\n");
+}
+/********************************************************************
+This function sets 3 different modules of TimerA to be able to do PWM
+for the trigger signal and LED brightness and capture/compare of the
+echo signal.
+*********************************************************************/
+void TimerA_init (void){
+////////////////////////////////////////////////////////////////////////////
+    //TimerA2 (LED)
+    TIMER_A2->CCR[0]  |= PERIOD;                // PWM Period (# cycles of clock)
+
+    //TimerA2.1 Pin5.6 (LED)
+    TIMER_A2->CCR[1]   =  0;           // Initial duty cycle off
+    TIMER_A2->CCTL[1] = TIMER_A_CCTLN_OUTMOD_7;         // Reset/set
+    TIMER_A2->CTL = TIMER_A_CTL_SSEL__SMCLK|    // use SMCLK
+                    TIMER_A_CTL_MC__UP     |    // in Up mode
+                    TIMER_A_CTL_ID_3      |    // Divide by 8
+                    TIMER_A_CTL_CLR;            // Clear TAR to start
+}
+
+/********************************************************************
+This function looks at the distance then changes the value of percent
+which is used to manipulate the duty cycle variable. duty cycle will
+then be put into the CCR register.
+
+The 2Hz flag is set off when distance is below 1in (0in). It is false
+at every other possible distance. If any other distance is measured,
+it is assume the sensor is picking up random numbers, so the percent
+value is held.
+*********************************************************************/
+void LED_PWM(void) {
+
+   if(count <= 20 && count >= 0){
+       if(count != pCount){
+           TIMER_A2->CCR[1] = PERIOD * (count / 20.0);
+       }
+   }
+   pCount = count;
+}

@@ -1,0 +1,297 @@
+*****************************************************************************
+* EUSCI_B Bits
+******************************************************************************/
+/* EUSCI_B_CTLW0[SWRST] Bits */
+#define EUSCI_B_CTLW0_SWRST_OFS                  ( 0)                            /*!< UCSWRST Bit Offset */
+#define EUSCI_B_CTLW0_SWRST                      ((uint16_t)0x0001)              /*!< Software reset enable */
+/* EUSCI_B_CTLW0[TXSTT] Bits */
+#define EUSCI_B_CTLW0_TXSTT_OFS                  ( 1)                            /*!< UCTXSTT Bit Offset */
+#define EUSCI_B_CTLW0_TXSTT                      ((uint16_t)0x0002)              /*!< Transmit START condition in master mode */
+/* EUSCI_B_CTLW0[TXSTP] Bits */
+#define EUSCI_B_CTLW0_TXSTP_OFS                  ( 2)                            /*!< UCTXSTP Bit Offset */
+#define EUSCI_B_CTLW0_TXSTP                      ((uint16_t)0x0004)              /*!< Transmit STOP condition in master mode */
+/* EUSCI_B_CTLW0[TXNACK] Bits */
+#define EUSCI_B_CTLW0_TXNACK_OFS                 ( 3)                            /*!< UCTXNACK Bit Offset */
+#define EUSCI_B_CTLW0_TXNACK                     ((uint16_t)0x0008)              /*!< Transmit a NACK */
+/* EUSCI_B_CTLW0[TR] Bits */
+#define EUSCI_B_CTLW0_TR_OFS                     ( 4)                            /*!< UCTR Bit Offset */
+#define EUSCI_B_CTLW0_TR                         ((uint16_t)0x0010)              /*!< Transmitter/receiver */
+/* EUSCI_B_CTLW0[TXACK] Bits */
+#define EUSCI_B_CTLW0_TXACK_OFS                  ( 5)                            /*!< UCTXACK Bit Offset */
+#define EUSCI_B_CTLW0_TXACK                      ((uint16_t)0x0020)              /*!< Transmit ACK condition in slave mode */
+/* EUSCI_B_CTLW0[SSEL] Bits */
+#define EUSCI_B_CTLW0_SSEL_OFS                   ( 6)                            /*!< UCSSEL Bit Offset */
+#define EUSCI_B_CTLW0_SSEL_MASK                  ((uint16_t)0x00C0)              /*!< UCSSEL Bit Mask */
+#define EUSCI_B_CTLW0_SSEL0                      ((uint16_t)0x0040)              /*!< SSEL Bit 0 */
+#define EUSCI_B_CTLW0_SSEL1                      ((uint16_t)0x0080)              /*!< SSEL Bit 1 */
+#define EUSCI_B_CTLW0_UCSSEL_0                   ((uint16_t)0x0000)              /*!< UCLKI */
+#define EUSCI_B_CTLW0_UCSSEL_1                   ((uint16_t)0x0040)              /*!< ACLK */
+#define EUSCI_B_CTLW0_UCSSEL_2                   ((uint16_t)0x0080)              /*!< SMCLK */
+#define EUSCI_B_CTLW0_UCSSEL_3                   ((uint16_t)0x00C0)              /*!< SMCLK */
+#define EUSCI_B_CTLW0_SSEL__UCLKI                ((uint16_t)0x0000)              /*!< UCLKI */
+#define EUSCI_B_CTLW0_SSEL__ACLK                 ((uint16_t)0x0040)              /*!< ACLK */
+#define EUSCI_B_CTLW0_SSEL__SMCLK                ((uint16_t)0x0080)              /*!< SMCLK */
+/* EUSCI_B_CTLW0[SYNC] Bits */
+#define EUSCI_B_CTLW0_SYNC_OFS                   ( 8)                            /*!< UCSYNC Bit Offset */
+#define EUSCI_B_CTLW0_SYNC                       ((uint16_t)0x0100)              /*!< Synchronous mode enable */
+/* EUSCI_B_CTLW0[MODE] Bits */
+#define EUSCI_B_CTLW0_MODE_OFS                   ( 9)                            /*!< UCMODE Bit Offset */
+#define EUSCI_B_CTLW0_MODE_MASK                  ((uint16_t)0x0600)              /*!< UCMODE Bit Mask */
+#define EUSCI_B_CTLW0_MODE0                      ((uint16_t)0x0200)              /*!< MODE Bit 0 */
+#define EUSCI_B_CTLW0_MODE1                      ((uint16_t)0x0400)              /*!< MODE Bit 1 */
+#define EUSCI_B_CTLW0_MODE_0                     ((uint16_t)0x0000)              /*!< 3-pin SPI */
+#define EUSCI_B_CTLW0_MODE_1                     ((uint16_t)0x0200)              /*!< 4-pin SPI (master or slave enabled if STE = 1) */
+#define EUSCI_B_CTLW0_MODE_2                     ((uint16_t)0x0400)              /*!< 4-pin SPI (master or slave enabled if STE = 0) */
+#define EUSCI_B_CTLW0_MODE_3                     ((uint16_t)0x0600)              /*!< I2C mode */
+/* EUSCI_B_CTLW0[MST] Bits */
+#define EUSCI_B_CTLW0_MST_OFS                    (11)                            /*!< UCMST Bit Offset */
+#define EUSCI_B_CTLW0_MST                        ((uint16_t)0x0800)              /*!< Master mode select */
+/* EUSCI_B_CTLW0[MM] Bits */
+#define EUSCI_B_CTLW0_MM_OFS                     (13)                            /*!< UCMM Bit Offset */
+#define EUSCI_B_CTLW0_MM                         ((uint16_t)0x2000)              /*!< Multi-master environment select */
+/* EUSCI_B_CTLW0[SLA10] Bits */
+#define EUSCI_B_CTLW0_SLA10_OFS                  (14)                            /*!< UCSLA10 Bit Offset */
+#define EUSCI_B_CTLW0_SLA10                      ((uint16_t)0x4000)              /*!< Slave addressing mode select */
+/* EUSCI_B_CTLW0[A10] Bits */
+#define EUSCI_B_CTLW0_A10_OFS                    (15)                            /*!< UCA10 Bit Offset */
+#define EUSCI_B_CTLW0_A10                        ((uint16_t)0x8000)              /*!< Own addressing mode select */
+/* EUSCI_B_CTLW0[STEM] Bits */
+#define EUSCI_B_CTLW0_STEM_OFS                   ( 1)                            /*!< UCSTEM Bit Offset */
+#define EUSCI_B_CTLW0_STEM                       ((uint16_t)0x0002)              /*!< STE mode select in master mode. */
+/* EUSCI_B_CTLW0[SEVENBIT] Bits */
+#define EUSCI_B_CTLW0_SEVENBIT_OFS               (12)                            /*!< UC7BIT Bit Offset */
+#define EUSCI_B_CTLW0_SEVENBIT                   ((uint16_t)0x1000)              /*!< Character length */
+/* EUSCI_B_CTLW0[MSB] Bits */
+#define EUSCI_B_CTLW0_MSB_OFS                    (13)                            /*!< UCMSB Bit Offset */
+#define EUSCI_B_CTLW0_MSB                        ((uint16_t)0x2000)              /*!< MSB first select */
+/* EUSCI_B_CTLW0[CKPL] Bits */
+#define EUSCI_B_CTLW0_CKPL_OFS                   (14)                            /*!< UCCKPL Bit Offset */
+#define EUSCI_B_CTLW0_CKPL                       ((uint16_t)0x4000)              /*!< Clock polarity select */
+/* EUSCI_B_CTLW0[CKPH] Bits */
+#define EUSCI_B_CTLW0_CKPH_OFS                   (15)                            /*!< UCCKPH Bit Offset */
+#define EUSCI_B_CTLW0_CKPH                       ((uint16_t)0x8000)              /*!< Clock phase select */
+/* EUSCI_B_CTLW1[GLIT] Bits */
+#define EUSCI_B_CTLW1_GLIT_OFS                   ( 0)                            /*!< UCGLIT Bit Offset */
+#define EUSCI_B_CTLW1_GLIT_MASK                  ((uint16_t)0x0003)              /*!< UCGLIT Bit Mask */
+#define EUSCI_B_CTLW1_GLIT0                      ((uint16_t)0x0001)              /*!< GLIT Bit 0 */
+#define EUSCI_B_CTLW1_GLIT1                      ((uint16_t)0x0002)              /*!< GLIT Bit 1 */
+#define EUSCI_B_CTLW1_GLIT_0                     ((uint16_t)0x0000)              /*!< 50 ns */
+#define EUSCI_B_CTLW1_GLIT_1                     ((uint16_t)0x0001)              /*!< 25 ns */
+#define EUSCI_B_CTLW1_GLIT_2                     ((uint16_t)0x0002)              /*!< 12.5 ns */
+#define EUSCI_B_CTLW1_GLIT_3                     ((uint16_t)0x0003)              /*!< 6.25 ns */
+/* EUSCI_B_CTLW1[ASTP] Bits */
+#define EUSCI_B_CTLW1_ASTP_OFS                   ( 2)                            /*!< UCASTP Bit Offset */
+#define EUSCI_B_CTLW1_ASTP_MASK                  ((uint16_t)0x000C)              /*!< UCASTP Bit Mask */
+#define EUSCI_B_CTLW1_ASTP0                      ((uint16_t)0x0004)              /*!< ASTP Bit 0 */
+#define EUSCI_B_CTLW1_ASTP1                      ((uint16_t)0x0008)              /*!< ASTP Bit 1 */
+#define EUSCI_B_CTLW1_ASTP_0                     ((uint16_t)0x0000)              /*!< No automatic STOP generation. The STOP condition is generated after the user  */
+                                                                                 /* sets the UCTXSTP bit. The value in UCBxTBCNT is a don't care. */
+#define EUSCI_B_CTLW1_ASTP_1                     ((uint16_t)0x0004)              /*!< UCBCNTIFG is set with the byte counter reaches the threshold defined in  */
+                                                                                 /* UCBxTBCNT */
+#define EUSCI_B_CTLW1_ASTP_2                     ((uint16_t)0x0008)              /*!< A STOP condition is generated automatically after the byte counter value  */
+                                                                                 /* reached UCBxTBCNT. UCBCNTIFG is set with the byte counter reaching the */
+                                                                                 /* threshold */
+/* EUSCI_B_CTLW1[SWACK] Bits */
+#define EUSCI_B_CTLW1_SWACK_OFS                  ( 4)                            /*!< UCSWACK Bit Offset */
+#define EUSCI_B_CTLW1_SWACK                      ((uint16_t)0x0010)              /*!< SW or HW ACK control */
+/* EUSCI_B_CTLW1[STPNACK] Bits */
+#define EUSCI_B_CTLW1_STPNACK_OFS                ( 5)                            /*!< UCSTPNACK Bit Offset */
+#define EUSCI_B_CTLW1_STPNACK                    ((uint16_t)0x0020)              /*!< ACK all master bytes */
+/* EUSCI_B_CTLW1[CLTO] Bits */
+#define EUSCI_B_CTLW1_CLTO_OFS                   ( 6)                            /*!< UCCLTO Bit Offset */
+#define EUSCI_B_CTLW1_CLTO_MASK                  ((uint16_t)0x00C0)              /*!< UCCLTO Bit Mask */
+#define EUSCI_B_CTLW1_CLTO0                      ((uint16_t)0x0040)              /*!< CLTO Bit 0 */
+#define EUSCI_B_CTLW1_CLTO1                      ((uint16_t)0x0080)              /*!< CLTO Bit 1 */
+#define EUSCI_B_CTLW1_CLTO_0                     ((uint16_t)0x0000)              /*!< Disable clock low timeout counter */
+#define EUSCI_B_CTLW1_CLTO_1                     ((uint16_t)0x0040)              /*!< 135 000 SYSCLK cycles (approximately 28 ms) */
+#define EUSCI_B_CTLW1_CLTO_2                     ((uint16_t)0x0080)              /*!< 150 000 SYSCLK cycles (approximately 31 ms) */
+#define EUSCI_B_CTLW1_CLTO_3                     ((uint16_t)0x00C0)              /*!< 165 000 SYSCLK cycles (approximately 34 ms) */
+/* EUSCI_B_CTLW1[ETXINT] Bits */
+#define EUSCI_B_CTLW1_ETXINT_OFS                 ( 8)                            /*!< UCETXINT Bit Offset */
+#define EUSCI_B_CTLW1_ETXINT                     ((uint16_t)0x0100)              /*!< Early UCTXIFG0 */
+/* EUSCI_B_STATW[BBUSY] Bits */
+#define EUSCI_B_STATW_BBUSY_OFS                  ( 4)                            /*!< UCBBUSY Bit Offset */
+#define EUSCI_B_STATW_BBUSY                      ((uint16_t)0x0010)              /*!< Bus busy */
+/* EUSCI_B_STATW[GC] Bits */
+#define EUSCI_B_STATW_GC_OFS                     ( 5)                            /*!< UCGC Bit Offset */
+#define EUSCI_B_STATW_GC                         ((uint16_t)0x0020)              /*!< General call address received */
+/* EUSCI_B_STATW[SCLLOW] Bits */
+#define EUSCI_B_STATW_SCLLOW_OFS                 ( 6)                            /*!< UCSCLLOW Bit Offset */
+#define EUSCI_B_STATW_SCLLOW                     ((uint16_t)0x0040)              /*!< SCL low */
+/* EUSCI_B_STATW[BCNT] Bits */
+#define EUSCI_B_STATW_BCNT_OFS                   ( 8)                            /*!< UCBCNT Bit Offset */
+#define EUSCI_B_STATW_BCNT_MASK                  ((uint16_t)0xFF00)              /*!< UCBCNT Bit Mask */
+/* EUSCI_B_STATW[SPI_BUSY] Bits */
+#define EUSCI_B_STATW_SPI_BUSY_OFS               ( 0)                            /*!< UCBUSY Bit Offset */
+#define EUSCI_B_STATW_SPI_BUSY                   ((uint16_t)0x0001)              /*!< eUSCI_B busy */
+/* EUSCI_B_STATW[OE] Bits */
+#define EUSCI_B_STATW_OE_OFS                     ( 5)                            /*!< UCOE Bit Offset */
+#define EUSCI_B_STATW_OE                         ((uint16_t)0x0020)              /*!< Overrun error flag */
+/* EUSCI_B_STATW[FE] Bits */
+#define EUSCI_B_STATW_FE_OFS                     ( 6)                            /*!< UCFE Bit Offset */
+#define EUSCI_B_STATW_FE                         ((uint16_t)0x0040)              /*!< Framing error flag */
+/* EUSCI_B_STATW[LISTEN] Bits */
+#define EUSCI_B_STATW_LISTEN_OFS                 ( 7)                            /*!< UCLISTEN Bit Offset */
+#define EUSCI_B_STATW_LISTEN                     ((uint16_t)0x0080)              /*!< Listen enable */
+/* EUSCI_B_TBCNT[TBCNT] Bits */
+#define EUSCI_B_TBCNT_TBCNT_OFS                  ( 0)                            /*!< UCTBCNT Bit Offset */
+#define EUSCI_B_TBCNT_TBCNT_MASK                 ((uint16_t)0x00FF)              /*!< UCTBCNT Bit Mask */
+/* EUSCI_B_RXBUF[RXBUF] Bits */
+#define EUSCI_B_RXBUF_RXBUF_OFS                  ( 0)                            /*!< UCRXBUF Bit Offset */
+#define EUSCI_B_RXBUF_RXBUF_MASK                 ((uint16_t)0x00FF)              /*!< UCRXBUF Bit Mask */
+/* EUSCI_B_TXBUF[TXBUF] Bits */
+#define EUSCI_B_TXBUF_TXBUF_OFS                  ( 0)                            /*!< UCTXBUF Bit Offset */
+#define EUSCI_B_TXBUF_TXBUF_MASK                 ((uint16_t)0x00FF)              /*!< UCTXBUF Bit Mask */
+/* EUSCI_B_I2COA0[I2COA0] Bits */
+#define EUSCI_B_I2COA0_I2COA0_OFS                ( 0)                            /*!< I2COA0 Bit Offset */
+#define EUSCI_B_I2COA0_I2COA0_MASK               ((uint16_t)0x03FF)              /*!< I2COA0 Bit Mask */
+/* EUSCI_B_I2COA0[OAEN] Bits */
+#define EUSCI_B_I2COA0_OAEN_OFS                  (10)                            /*!< UCOAEN Bit Offset */
+#define EUSCI_B_I2COA0_OAEN                      ((uint16_t)0x0400)              /*!< Own Address enable register */
+/* EUSCI_B_I2COA0[GCEN] Bits */
+#define EUSCI_B_I2COA0_GCEN_OFS                  (15)                            /*!< UCGCEN Bit Offset */
+#define EUSCI_B_I2COA0_GCEN                      ((uint16_t)0x8000)              /*!< General call response enable */
+/* EUSCI_B_I2COA1[I2COA1] Bits */
+#define EUSCI_B_I2COA1_I2COA1_OFS                ( 0)                            /*!< I2COA1 Bit Offset */
+#define EUSCI_B_I2COA1_I2COA1_MASK               ((uint16_t)0x03FF)              /*!< I2COA1 Bit Mask */
+/* EUSCI_B_I2COA1[OAEN] Bits */
+#define EUSCI_B_I2COA1_OAEN_OFS                  (10)                            /*!< UCOAEN Bit Offset */
+#define EUSCI_B_I2COA1_OAEN                      ((uint16_t)0x0400)              /*!< Own Address enable register */
+/* EUSCI_B_I2COA2[I2COA2] Bits */
+#define EUSCI_B_I2COA2_I2COA2_OFS                ( 0)                            /*!< I2COA2 Bit Offset */
+#define EUSCI_B_I2COA2_I2COA2_MASK               ((uint16_t)0x03FF)              /*!< I2COA2 Bit Mask */
+/* EUSCI_B_I2COA2[OAEN] Bits */
+#define EUSCI_B_I2COA2_OAEN_OFS                  (10)                            /*!< UCOAEN Bit Offset */
+#define EUSCI_B_I2COA2_OAEN                      ((uint16_t)0x0400)              /*!< Own Address enable register */
+/* EUSCI_B_I2COA3[I2COA3] Bits */
+#define EUSCI_B_I2COA3_I2COA3_OFS                ( 0)                            /*!< I2COA3 Bit Offset */
+#define EUSCI_B_I2COA3_I2COA3_MASK               ((uint16_t)0x03FF)              /*!< I2COA3 Bit Mask */
+/* EUSCI_B_I2COA3[OAEN] Bits */
+#define EUSCI_B_I2COA3_OAEN_OFS                  (10)                            /*!< UCOAEN Bit Offset */
+#define EUSCI_B_I2COA3_OAEN                      ((uint16_t)0x0400)              /*!< Own Address enable register */
+/* EUSCI_B_ADDRX[ADDRX] Bits */
+#define EUSCI_B_ADDRX_ADDRX_OFS                  ( 0)                            /*!< ADDRX Bit Offset */
+#define EUSCI_B_ADDRX_ADDRX_MASK                 ((uint16_t)0x03FF)              /*!< ADDRX Bit Mask */
+#define EUSCI_B_ADDRX_ADDRX0                     ((uint16_t)0x0001)              /*!< ADDRX Bit 0 */
+#define EUSCI_B_ADDRX_ADDRX1                     ((uint16_t)0x0002)              /*!< ADDRX Bit 1 */
+#define EUSCI_B_ADDRX_ADDRX2                     ((uint16_t)0x0004)              /*!< ADDRX Bit 2 */
+#define EUSCI_B_ADDRX_ADDRX3                     ((uint16_t)0x0008)              /*!< ADDRX Bit 3 */
+#define EUSCI_B_ADDRX_ADDRX4                     ((uint16_t)0x0010)              /*!< ADDRX Bit 4 */
+#define EUSCI_B_ADDRX_ADDRX5                     ((uint16_t)0x0020)              /*!< ADDRX Bit 5 */
+#define EUSCI_B_ADDRX_ADDRX6                     ((uint16_t)0x0040)              /*!< ADDRX Bit 6 */
+#define EUSCI_B_ADDRX_ADDRX7                     ((uint16_t)0x0080)              /*!< ADDRX Bit 7 */
+#define EUSCI_B_ADDRX_ADDRX8                     ((uint16_t)0x0100)              /*!< ADDRX Bit 8 */
+#define EUSCI_B_ADDRX_ADDRX9                     ((uint16_t)0x0200)              /*!< ADDRX Bit 9 */
+/* EUSCI_B_ADDMASK[ADDMASK] Bits */
+#define EUSCI_B_ADDMASK_ADDMASK_OFS              ( 0)                            /*!< ADDMASK Bit Offset */
+#define EUSCI_B_ADDMASK_ADDMASK_MASK             ((uint16_t)0x03FF)              /*!< ADDMASK Bit Mask */
+/* EUSCI_B_I2CSA[I2CSA] Bits */
+#define EUSCI_B_I2CSA_I2CSA_OFS                  ( 0)                            /*!< I2CSA Bit Offset */
+#define EUSCI_B_I2CSA_I2CSA_MASK                 ((uint16_t)0x03FF)              /*!< I2CSA Bit Mask */
+/* EUSCI_B_IE[RXIE0] Bits */
+#define EUSCI_B_IE_RXIE0_OFS                     ( 0)                            /*!< UCRXIE0 Bit Offset */
+#define EUSCI_B_IE_RXIE0                         ((uint16_t)0x0001)              /*!< Receive interrupt enable 0 */
+/* EUSCI_B_IE[TXIE0] Bits */
+#define EUSCI_B_IE_TXIE0_OFS                     ( 1)                            /*!< UCTXIE0 Bit Offset */
+#define EUSCI_B_IE_TXIE0                         ((uint16_t)0x0002)              /*!< Transmit interrupt enable 0 */
+/* EUSCI_B_IE[STTIE] Bits */
+#define EUSCI_B_IE_STTIE_OFS                     ( 2)                            /*!< UCSTTIE Bit Offset */
+#define EUSCI_B_IE_STTIE                         ((uint16_t)0x0004)              /*!< START condition interrupt enable */
+/* EUSCI_B_IE[STPIE] Bits */
+#define EUSCI_B_IE_STPIE_OFS                     ( 3)                            /*!< UCSTPIE Bit Offset */
+#define EUSCI_B_IE_STPIE                         ((uint16_t)0x0008)              /*!< STOP condition interrupt enable */
+/* EUSCI_B_IE[ALIE] Bits */
+#define EUSCI_B_IE_ALIE_OFS                      ( 4)                            /*!< UCALIE Bit Offset */
+#define EUSCI_B_IE_ALIE                          ((uint16_t)0x0010)              /*!< Arbitration lost interrupt enable */
+/* EUSCI_B_IE[NACKIE] Bits */
+#define EUSCI_B_IE_NACKIE_OFS                    ( 5)                            /*!< UCNACKIE Bit Offset */
+#define EUSCI_B_IE_NACKIE                        ((uint16_t)0x0020)              /*!< Not-acknowledge interrupt enable */
+/* EUSCI_B_IE[BCNTIE] Bits */
+#define EUSCI_B_IE_BCNTIE_OFS                    ( 6)                            /*!< UCBCNTIE Bit Offset */
+#define EUSCI_B_IE_BCNTIE                        ((uint16_t)0x0040)              /*!< Byte counter interrupt enable */
+/* EUSCI_B_IE[CLTOIE] Bits */
+#define EUSCI_B_IE_CLTOIE_OFS                    ( 7)                            /*!< UCCLTOIE Bit Offset */
+#define EUSCI_B_IE_CLTOIE                        ((uint16_t)0x0080)              /*!< Clock low timeout interrupt enable */
+/* EUSCI_B_IE[RXIE1] Bits */
+#define EUSCI_B_IE_RXIE1_OFS                     ( 8)                            /*!< UCRXIE1 Bit Offset */
+#define EUSCI_B_IE_RXIE1                         ((uint16_t)0x0100)              /*!< Receive interrupt enable 1 */
+/* EUSCI_B_IE[TXIE1] Bits */
+#define EUSCI_B_IE_TXIE1_OFS                     ( 9)                            /*!< UCTXIE1 Bit Offset */
+#define EUSCI_B_IE_TXIE1                         ((uint16_t)0x0200)              /*!< Transmit interrupt enable 1 */
+/* EUSCI_B_IE[RXIE2] Bits */
+#define EUSCI_B_IE_RXIE2_OFS                     (10)                            /*!< UCRXIE2 Bit Offset */
+#define EUSCI_B_IE_RXIE2                         ((uint16_t)0x0400)              /*!< Receive interrupt enable 2 */
+/* EUSCI_B_IE[TXIE2] Bits */
+#define EUSCI_B_IE_TXIE2_OFS                     (11)                            /*!< UCTXIE2 Bit Offset */
+#define EUSCI_B_IE_TXIE2                         ((uint16_t)0x0800)              /*!< Transmit interrupt enable 2 */
+/* EUSCI_B_IE[RXIE3] Bits */
+#define EUSCI_B_IE_RXIE3_OFS                     (12)                            /*!< UCRXIE3 Bit Offset */
+#define EUSCI_B_IE_RXIE3                         ((uint16_t)0x1000)              /*!< Receive interrupt enable 3 */
+/* EUSCI_B_IE[TXIE3] Bits */
+#define EUSCI_B_IE_TXIE3_OFS                     (13)                            /*!< UCTXIE3 Bit Offset */
+#define EUSCI_B_IE_TXIE3                         ((uint16_t)0x2000)              /*!< Transmit interrupt enable 3 */
+/* EUSCI_B_IE[BIT9IE] Bits */
+#define EUSCI_B_IE_BIT9IE_OFS                    (14)                            /*!< UCBIT9IE Bit Offset */
+#define EUSCI_B_IE_BIT9IE                        ((uint16_t)0x4000)              /*!< Bit position 9 interrupt enable */
+/* EUSCI_B_IE[RXIE] Bits */
+#define EUSCI_B_IE_RXIE_OFS                      ( 0)                            /*!< UCRXIE Bit Offset */
+#define EUSCI_B_IE_RXIE                          ((uint16_t)0x0001)              /*!< Receive interrupt enable */
+/* EUSCI_B_IE[TXIE] Bits */
+#define EUSCI_B_IE_TXIE_OFS                      ( 1)                            /*!< UCTXIE Bit Offset */
+#define EUSCI_B_IE_TXIE                          ((uint16_t)0x0002)              /*!< Transmit interrupt enable */
+/* EUSCI_B_IFG[RXIFG0] Bits */
+#define EUSCI_B_IFG_RXIFG0_OFS                   ( 0)                            /*!< UCRXIFG0 Bit Offset */
+#define EUSCI_B_IFG_RXIFG0                       ((uint16_t)0x0001)              /*!< eUSCI_B receive interrupt flag 0 */
+/* EUSCI_B_IFG[TXIFG0] Bits */
+#define EUSCI_B_IFG_TXIFG0_OFS                   ( 1)                            /*!< UCTXIFG0 Bit Offset */
+#define EUSCI_B_IFG_TXIFG0                       ((uint16_t)0x0002)              /*!< eUSCI_B transmit interrupt flag 0 */
+/* EUSCI_B_IFG[STTIFG] Bits */
+#define EUSCI_B_IFG_STTIFG_OFS                   ( 2)                            /*!< UCSTTIFG Bit Offset */
+#define EUSCI_B_IFG_STTIFG                       ((uint16_t)0x0004)              /*!< START condition interrupt flag */
+/* EUSCI_B_IFG[STPIFG] Bits */
+#define EUSCI_B_IFG_STPIFG_OFS                   ( 3)                            /*!< UCSTPIFG Bit Offset */
+#define EUSCI_B_IFG_STPIFG                       ((uint16_t)0x0008)              /*!< STOP condition interrupt flag */
+/* EUSCI_B_IFG[ALIFG] Bits */
+#define EUSCI_B_IFG_ALIFG_OFS                    ( 4)                            /*!< UCALIFG Bit Offset */
+#define EUSCI_B_IFG_ALIFG                        ((uint16_t)0x0010)              /*!< Arbitration lost interrupt flag */
+/* EUSCI_B_IFG[NACKIFG] Bits */
+#define EUSCI_B_IFG_NACKIFG_OFS                  ( 5)                            /*!< UCNACKIFG Bit Offset */
+#define EUSCI_B_IFG_NACKIFG                      ((uint16_t)0x0020)              /*!< Not-acknowledge received interrupt flag */
+/* EUSCI_B_IFG[BCNTIFG] Bits */
+#define EUSCI_B_IFG_BCNTIFG_OFS                  ( 6)                            /*!< UCBCNTIFG Bit Offset */
+#define EUSCI_B_IFG_BCNTIFG                      ((uint16_t)0x0040)              /*!< Byte counter interrupt flag */
+/* EUSCI_B_IFG[CLTOIFG] Bits */
+#define EUSCI_B_IFG_CLTOIFG_OFS                  ( 7)                            /*!< UCCLTOIFG Bit Offset */
+#define EUSCI_B_IFG_CLTOIFG                      ((uint16_t)0x0080)              /*!< Clock low timeout interrupt flag */
+/* EUSCI_B_IFG[RXIFG1] Bits */
+#define EUSCI_B_IFG_RXIFG1_OFS                   ( 8)                            /*!< UCRXIFG1 Bit Offset */
+#define EUSCI_B_IFG_RXIFG1                       ((uint16_t)0x0100)              /*!< eUSCI_B receive interrupt flag 1 */
+/* EUSCI_B_IFG[TXIFG1] Bits */
+#define EUSCI_B_IFG_TXIFG1_OFS                   ( 9)                            /*!< UCTXIFG1 Bit Offset */
+#define EUSCI_B_IFG_TXIFG1                       ((uint16_t)0x0200)              /*!< eUSCI_B transmit interrupt flag 1 */
+/* EUSCI_B_IFG[RXIFG2] Bits */
+#define EUSCI_B_IFG_RXIFG2_OFS                   (10)                            /*!< UCRXIFG2 Bit Offset */
+#define EUSCI_B_IFG_RXIFG2                       ((uint16_t)0x0400)              /*!< eUSCI_B receive interrupt flag 2 */
+/* EUSCI_B_IFG[TXIFG2] Bits */
+#define EUSCI_B_IFG_TXIFG2_OFS                   (11)                            /*!< UCTXIFG2 Bit Offset */
+#define EUSCI_B_IFG_TXIFG2                       ((uint16_t)0x0800)              /*!< eUSCI_B transmit interrupt flag 2 */
+/* EUSCI_B_IFG[RXIFG3] Bits */
+#define EUSCI_B_IFG_RXIFG3_OFS                   (12)                            /*!< UCRXIFG3 Bit Offset */
+#define EUSCI_B_IFG_RXIFG3                       ((uint16_t)0x1000)              /*!< eUSCI_B receive interrupt flag 3 */
+/* EUSCI_B_IFG[TXIFG3] Bits */
+#define EUSCI_B_IFG_TXIFG3_OFS                   (13)                            /*!< UCTXIFG3 Bit Offset */
+#define EUSCI_B_IFG_TXIFG3                       ((uint16_t)0x2000)              /*!< eUSCI_B transmit interrupt flag 3 */
+/* EUSCI_B_IFG[BIT9IFG] Bits */
+#define EUSCI_B_IFG_BIT9IFG_OFS                  (14)                            /*!< UCBIT9IFG Bit Offset */
+#define EUSCI_B_IFG_BIT9IFG                      ((uint16_t)0x4000)              /*!< Bit position 9 interrupt flag */
+/* EUSCI_B_IFG[RXIFG] Bits */
+#define EUSCI_B_IFG_RXIFG_OFS                    ( 0)                            /*!< UCRXIFG Bit Offset */
+#define EUSCI_B_IFG_RXIFG                        ((uint16_t)0x0001)              /*!< Receive interrupt flag */
+/* EUSCI_B_IFG[TXIFG] Bits */
+#define EUSCI_B_IFG_TXIFG_OFS                    ( 1)                            /*!< UCTXIFG Bit Offset */
+#define EUSCI_B_IFG_TXIFG                        ((uint16_t)0x0002)              /*!< Transmit interrupt flag */
+/* legacy definitions for backward compatibility to version 2100 */
+#define EUSCI_B__RXIE_OFS                        EUSCI_B_IE_RXIE_OFS             /*!< UCRXIE Bit Offset */
+#define EUSCI_B__RXIE                            EUSCI_B_IE_RXIE                 /*!< Receive interrupt enable */
+#define EUSCI_B__TXIE_OFS                        EUSCI_B_IE_TXIE_OFS             /*!< UCTXIE Bit Offset */
+#define EUSCI_B__TXIE                            EUSCI_B_IE_TXIE                 /*!< Transmit interrupt enable */

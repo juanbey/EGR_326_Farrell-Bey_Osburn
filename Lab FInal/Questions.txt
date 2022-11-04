@@ -1,0 +1,7 @@
+Final Date
+Audio & Date/Time w/ Rotary Encoder
+User/Pre recorded voices
+Segmented display can show distance
+temperature sensor on the RTC
+does uml need stop
+What is the timeframe for the PCB
