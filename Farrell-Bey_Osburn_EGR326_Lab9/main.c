@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
-// #include "ST7735.h"
+#include "ST7735.h"
 #include "motor.h"
 #include "keypad.h"
 
@@ -15,7 +15,7 @@ RST     P9.3
 CS      P9.4
 */
 
-#define HALL BIT6     // P2.6
+#define HALL BIT6 // P2.6
 
 #define CS BIT4   // P9.4
 #define CLK BIT5  // P9.5
@@ -29,21 +29,23 @@ char *closed = "CLOSED\n";
 bool gateClosed = false;
 bool first, odd = true;
 
-volatile uint16_t rpm, totalTime, rot_count, speed = 5;
+volatile uint16_t rpm, totalTime, rot_count, speed = 0;
 
 void main(void)
+
 {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD; // stop watchdog timer
 
-    //    Clock_Init48MHz(); // set system clock to 48 MHz
+    Clock_Init48MHz(); // set system clock to 48 MHz
     TimerA_init();
     Motor_Pin_Init();
     keypad_irq_init();
     Hall_init(); // the Hall Effect Sensor
-    //    Output_Init();
-    //    ST7735_FillScreen(ST7735_BLACK); // set screen to black
-    //    ST7735_SetTextColor(ST7735_WHITE);
-    //    Output_Clear();
+    Output_Init();
+    ST7735_FillScreen(ST7735_BLACK); // set screen to black
+    ST7735_SetTextColor(ST7735_WHITE);
+    Output_Clear();
+//    ST7735_DrawCharS(10 * 6, 7 * 10, 56, ST7735_WHITE, ST7735_BLACK, 4);
 
     while (1)
     {
@@ -63,9 +65,10 @@ void main(void)
         //            ST7735_OutString(closed); // display CLOSED on LCD
         //        }
 
-        if (totalTime >= 12000)
+        if (totalTime >= 5000)
         {
-            rpm = rot_count * 10;
+            rpm = rot_count * 20;
+            ST7735_DrawCharS(10 * 6, 7 * 10, (48 + rpm), ST7735_WHITE, ST7735_BLACK, 4);
 
             rot_count = 0;
             totalTime = 0;
@@ -82,15 +85,15 @@ void TA1_0_IRQHandler(void)
 
 void PORT2_IRQHandler(void)
 {
-    if (first || odd)
-    { // starts as true
-        ;
-    }
-
-    else
-    {
-        rot_count++;
-    }
+//    if (first || odd)
+//    { // starts as true
+//        ;
+//    }
+//
+//    else
+//    {
+         rot_count++;
+//    }
 
     odd = !odd;
 
@@ -118,7 +121,7 @@ void PORT4_IRQHandler(void)
 }
 
 ///*---------------------------------------------------------------------------------------------
-//This function initializes a pin to read the Hall Effect Sensor
+// This function initializes a pin to read the Hall Effect Sensor
 //-----------------------------------------------------------------------------------------------
 //*/
 void Hall_init(void)

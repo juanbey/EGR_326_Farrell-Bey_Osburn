@@ -34,6 +34,14 @@ void ms_delay(uint16_t delay)
 		; // wait for flag to be SET
 }
 
+void ms_delay48(uint16_t delay)
+{										  // Systick delay function
+	SysTick->LOAD = ((delay * 12000) - 1); // delay for 1 msecond per delay value
+	SysTick->VAL = 0;					  // any write to CVR clears it
+	while ((SysTick->CTRL & 0x00010000) == 0)
+		; // wait for flag to be SET
+}
+
 void sec_delay(uint16_t delay)
 {											 // Systick delay function
 	SysTick->LOAD = ((delay * 3000000) - 1); // delay for 1 msecond per delay value
@@ -66,7 +74,7 @@ void Clock_Init48MHz(void)
 			   CS_CTL1_SELM__HFXTCLK |
 			   CS_CTL1_SELS__HFXTCLK;
 
-	CS->CTL1 = CS->CTL1 | CS_CTL1_DIVS_2; // change the SMCLK clock speed to 12 MHz.    //change to div 4 for 3 mghz
+	CS->CTL1 = CS->CTL1 | CS_CTL1_DIVS_4; // change the SMCLK clock speed to 12 MHz.    //change to div 4 for 3 mghz
 
 	CS->KEY = 0; // Lock CS module from unintended accesses
 }

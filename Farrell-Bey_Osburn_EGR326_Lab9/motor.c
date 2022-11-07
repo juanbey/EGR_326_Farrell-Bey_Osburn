@@ -75,13 +75,13 @@ void FullStep(int phase, bool direction)
 	}
 }
 
+uint16_t delayTime = 500;
+
 void WaveShift(int phase, bool direction, int speed)
 {
-	uint8_t delayTime = 0;
-
 	if (speed <= 4 && speed >= 0)
 	{
-		delayTime = 500 - speed;
+		delayTime = 500 - (speed * 100);
 	}
 	else
 	{
@@ -95,22 +95,24 @@ void WaveShift(int phase, bool direction, int speed)
 		case 0:
 			P8->OUT &= ~(ALL); // turn everything Turn off previous phase
 			P8->OUT |= (INT1); // only turn on needed pins
-			ms_delay(delayTime);
+			ms_delay48(delayTime);
 			break;
 		case 1:
 			P8->OUT &= ~(ALL); // turn everything Turn off previous phase
 			P8->OUT |= (INT2); // only turn on needed pins
-			ms_delay(delayTime);
+			ms_delay48(delayTime);
 			break;
 		case 2:
 			P8->OUT &= ~(ALL); // turn everything Turn off previous phase
 			P8->OUT |= (INT3); // only turn on needed pins
-			ms_delay(delayTime);
+
+			ms_delay48(delayTime);
 			break;
 		case 3:
 			P8->OUT &= ~(ALL); // turn everything Turn off previous phase
 			P8->OUT |= (INT4); // only turn on needed pins
-			ms_delay(delayTime);
+
+			ms_delay48(delayTime);
 			break;
 		default:
 			break;
