@@ -26,10 +26,10 @@ void Hall_init(void); // Initializes P2.6 (Hall Effect Sensor)
 char *open = "OPEN\n";
 char *closed = "CLOSED\n";
 
-bool gateClosed = false;
+bool gateClosed, flage = false;
 bool first, odd = true;
 
-volatile uint16_t rpm, totalTime, rot_count, speed = 0;
+volatile uint16_t rpm, hundreds, tens, ones, totalTime, rot_count, speed = 0;
 
 void main(void)
 
@@ -47,8 +47,22 @@ void main(void)
     Output_Clear();
 //    ST7735_DrawCharS(10 * 6, 7 * 10, 56, ST7735_WHITE, ST7735_BLACK, 4);
 
+    //RPM
+    ST7735_DrawCharS(10 * 2, 3 * 10, 'R', ST7735_WHITE, ST7735_BLACK, 4);
+    ST7735_DrawCharS(10 * 5, 3 * 10, 'P', ST7735_WHITE, ST7735_BLACK, 4);
+    ST7735_DrawCharS(10 * 8, 3 * 10, 'M', ST7735_WHITE, ST7735_BLACK, 4);
     while (1)
     {
+        ST7735_SetCursor(10 * 2, 10 * 10);
+
+        if((P2->IN & HALL) == 1){
+            ST7735_OutString(open);
+              flage = 1;
+        }
+
+        if(flage == 0)
+            ST7735_OutString(closed);
+
         WaveDrive(speed);
 
         //        if (gateClosed)
@@ -68,7 +82,37 @@ void main(void)
         if (totalTime >= 5000)
         {
             rpm = rot_count * 20;
-            ST7735_DrawCharS(10 * 6, 7 * 10, (48 + rpm), ST7735_WHITE, ST7735_BLACK, 4);
+
+            hundreds = rpm / 100;
+            tens = (rpm % 100) / 10;
+            ones = rpm % 10;
+
+//            if(!hundreds && !tens) {
+//                            // Output_Clear();
+//                            ST7735_DrawCharS(10 * 8, 7 * 10, (48 + ones), ST7735_WHITE, ST7735_BLACK, 4);   // print 1's
+//            }
+//            else if(hundreds && !tens) {
+//                // Output_Clear();
+//                ST7735_DrawCharS(10 * 2, 7 * 10, (48 + hundreds), ST7735_WHITE, ST7735_BLACK, 4); // print 100's
+//                ST7735_DrawCharS(10 * 5, 7 * 10, (48), ST7735_WHITE, ST7735_BLACK, 4);          // print 0 for 10's
+//                ST7735_DrawCharS(10 * 8, 7 * 10, (48 + ones), ST7735_WHITE, ST7735_BLACK, 4);   // print 1's
+//}
+
+
+
+            if(hundreds)
+                ST7735_DrawCharS(10 * 2, 7 * 10, (48 + hundreds), ST7735_WHITE, ST7735_BLACK, 4);
+            else
+                ST7735_DrawCharS(10 * 2, 7 * 10, (48), ST7735_WHITE, ST7735_BLACK, 4);
+
+            if(tens)
+                ST7735_DrawCharS(10 * 5, 7 * 10, (48 + tens), ST7735_WHITE, ST7735_BLACK, 4);
+            else
+                ST7735_DrawCharS(10 * 5, 7 * 10, (48), ST7735_WHITE, ST7735_BLACK, 4);
+
+
+            ST7735_DrawCharS(10 * 8, 7 * 10, (48 + ones), ST7735_WHITE, ST7735_BLACK, 4);
+
 
             rot_count = 0;
             totalTime = 0;
@@ -85,6 +129,7 @@ void TA1_0_IRQHandler(void)
 
 void PORT2_IRQHandler(void)
 {
+    P2->IFG = 0; // clear flag
 //    if (first || odd)
 //    { // starts as true
 //        ;
@@ -92,16 +137,17 @@ void PORT2_IRQHandler(void)
 //
 //    else
 //    {
+    flage = 0;
          rot_count++;
 //    }
 
-    odd = !odd;
+    // odd = !odd;
 
-    gateClosed = 1; // set flag
-    first = false;
+    // gateClosed = 1; // set flag
+    // first = false;
 
     // clear counter
-    P2->IFG = 0; // clear flag
+    // P2->IFG = 0; // clear flag
 }
 
 void PORT4_IRQHandler(void)
