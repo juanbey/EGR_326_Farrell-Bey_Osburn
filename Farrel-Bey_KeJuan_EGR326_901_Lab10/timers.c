@@ -104,3 +104,18 @@ the CCR, count value when a rising edge is seen and then copying the
 value when the echo signal ends. The clk cycle count is converted to
 inches later.
 *********************************************************************/
+//void timerInit(void)
+//{
+//    TIMER_A0->CTL = 0b0000000111010100; // ACLK, Divide by 8, Count Up, Clear to start
+//    TIMER_A0->CCR[0] = 1024;
+//    TIMER_A0->CCR[1] = 1024; // Count to 1 second
+//
+//    // TIMER_A0->EX0 = 0b0000000000000111;           //divider of 8
+//    TIMER_A0->CCTL[1] = 0b0000000011110100; // CCR1 reset/set mode 7, with interrupt.
+//    TIMER_A0->CCTL[1] &= ~BIT0; // Clear Timer A0.1 interrupt flag
+//    TIMER_A0->CCTL[1] &= ~BIT1; // Clear Timer A0.1 overflow flag
+//
+//    count = 0;
+//
+//    // ST7735_DrawChar(51, 64, number, 0xFFFF, 0x0000, 4); // draws the number in the center
+//}

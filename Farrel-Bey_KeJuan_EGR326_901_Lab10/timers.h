@@ -12,5 +12,6 @@ void Clock_Init48MHz(void);
 //void Delay1ms(uint32_t n);
 //void parrotdelay(unsigned long ulCount);
 void TimerA_init(void);
+// void timerInit(void);
 
 #endif /* KEYPAD_H_ */
