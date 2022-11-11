@@ -53,15 +53,15 @@ void main(void)
     ST7735_DrawCharS(10 * 8, 3 * 10, 'M', ST7735_WHITE, ST7735_BLACK, 4);
     while (1)
     {
-        ST7735_SetCursor(10 * 2, 10 * 10);
+       //  ST7735_SetCursor(10 * 2, 10 * 10);
 
-        if((P2->IN & HALL) == 1){
-            ST7735_OutString(open);
-              flage = 1;
-        }
-
-        if(flage == 0)
-            ST7735_OutString(closed);
+//        if((P2->IN & HALL) == 1){
+//            ST7735_OutString(open);
+//              flage = 0;
+//        }
+//
+//        if(flage == 0)
+//            ST7735_OutString(closed);
 
         WaveDrive(speed);
 
