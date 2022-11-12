@@ -74,7 +74,11 @@ void Clock_Init48MHz(void)
 			   CS_CTL1_SELM__HFXTCLK |
 			   CS_CTL1_SELS__HFXTCLK;
 
+<<<<<<< HEAD
 	CS->CTL1 = CS->CTL1 | CS_CTL1_DIVS_2; // change the SMCLK clock speed to 12 MHz.    //change to div 4 for 3 mghz
+=======
+	CS->CTL1 = CS->CTL1 | CS_CTL1_DIVS_2; // change the SMCLK clock speed to 12 MHz.    //change to div 2 for 12 mghz
+>>>>>>> b8d3bbce8f29ca1232f1271449428d4541cb9084
 
 	CS->KEY = 0; // Lock CS module from unintended accesses
 }
@@ -89,7 +93,7 @@ void TimerA_init(void)
 	// TimerA0.2 Pin2.5 (Echo)
 	TIMER_A1->CCR[0] |= 60060 - 1; // max of 20ms
 
-	TIMER_A1->CTL = TIMER_A_CTL_SSEL__SMCLK |	 // use SMCLK
+	TIMER_A1->CTL = TIMER_A_CTL_SSEL__SMCLK |	 // use SMCLK (12MHz)
 					TIMER_A_CTL_MC__UP | // in Up mode
 					TIMER_A_CTL_CLR;			 // Clear TAR to start
 
