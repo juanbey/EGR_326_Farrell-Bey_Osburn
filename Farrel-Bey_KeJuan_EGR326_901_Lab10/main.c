@@ -18,22 +18,23 @@ uint16_t count = 0;
 uint32_t totalTime = 0;
 uint16_t i = 0;
 void main(void)
+
 {
 
+
+    __disable_interrupts();     // Disable all interrupts
+
+     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;     // stop watchdog timer
 
 
     // TODO: configure WDT to have a 4s timeout interval, soft reset mode, ACLK using REFOCLK
     // WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD;      // stop watchdog timer
 
-    WDT_A->CTL =    0x5A00 // Watchdog Password
-                    | 1<<5 //Set to ACLK
-                    | 0<<4 //Set to Watchdog mode
-                    | 1<<3 // Clear Timer
-                    | 3; //Set to 2^19 interval (16 seconds)
 
     Button_init();          // initialize P2.6 for the button
     LED_init();             // initialize P2.7 for LED
     TimerA_init();
+    Clock_Init48MHz();
     // timerInit();
 
     P2->OUT |= LED1;
@@ -49,6 +50,11 @@ void main(void)
     i = 0;
     P2->OUT |= LED1;
 
+    WDT_A->CTL =    WDT_A_CTL_PW // Watchdog Password
+                       | WDT_A_CTL_SSEL__ACLK //Set to ACLK
+                       | 0<<4 //Set to Watchdog mode
+                       | 1<<3 // Clear Timer
+                       | WDT_A_CTL_IS_4; //Set to 2^19 interval (16 seconds)
 
     while(1)
     {
@@ -150,7 +156,7 @@ void PORT3_IRQHandler(void)
                             | 1<<5 //Set to ACLK
                             | 0<<4 //Set to Watchdog mode
                             | 1<<3 // Clear Timer
-                            | 3; //Set to 2^19 interval (16 seconds)
+                            | 4; //Set to 2^19 interval (16 seconds)
             P3->IFG = 0; // clear flag
             // WDT_A->CTL = (WDT_A->CTL & ~0x2100) | 0x1208;
         }
