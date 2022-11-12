@@ -74,7 +74,7 @@ void Clock_Init48MHz(void)
 			   CS_CTL1_SELM__HFXTCLK |
 			   CS_CTL1_SELS__HFXTCLK;
 
-	CS->CTL1 = CS->CTL1 | CS_CTL1_DIVS_4; // change the SMCLK clock speed to 12 MHz.    //change to div 4 for 3 mghz
+	CS->CTL1 = CS->CTL1 | CS_CTL1_DIVS_2; // change the SMCLK clock speed to 12 MHz.    //change to div 4 for 3 mghz
 
 	CS->KEY = 0; // Lock CS module from unintended accesses
 }

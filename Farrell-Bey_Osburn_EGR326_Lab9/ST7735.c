@@ -735,7 +735,7 @@ void static commonInit(const uint8_t *cmdList) {
   // set the baud rate for the eUSCI which gets its clock from SMCLK
   // Clock_Init48MHz() from ClockSystem.c sets SMCLK = HFXTCLK/4 = 12 MHz
   // if the SMCLK is set to 12 MHz, divide by 3 for 4 MHz baud clock
-  EUSCI_A3->BRW = 1;        //change to 1 when on 3mhz
+  EUSCI_A3->BRW = 3;        //change to 1 when on 3mhz (originally 3)
   // modulation is not used in SPI mode, so clear EUSCI_A3->MCTLW
   EUSCI_A3->MCTLW = 0;
   P9->SEL0 |= 0xB0;

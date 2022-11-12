@@ -45,7 +45,7 @@ void main(void)
     ST7735_FillScreen(ST7735_BLACK); // set screen to black
     ST7735_SetTextColor(ST7735_WHITE);
     Output_Clear();
-//    ST7735_DrawCharS(10 * 6, 7 * 10, 56, ST7735_WHITE, ST7735_BLACK, 4);
+    //    ST7735_DrawCharS(10 * 6, 7 * 10, 56, ST7735_WHITE, ST7735_BLACK, 4);
 
     while (1)
     {
@@ -85,23 +85,26 @@ void TA1_0_IRQHandler(void)
 
 void PORT2_IRQHandler(void)
 {
-//    if (first || odd)
-//    { // starts as true
-//        ;
-//    }
-//
-//    else
-//    {
-         rot_count++;
-//    }
+    P2->IFG = 0; // clear flag
+
+
+
+    if(odd)
+    {                    // starts as true
+        TIMER_A1->R = 0; // reset TimerA counter at address/source
+    }
+
+    else
+    {
+        totalTime = TIMER_A1->CCR[1]; // grab counter value that is stored in the CCR
+        TIMER_A1->R = 0;              // reset TimerA counter at address/source
+    }
 
     odd = !odd;
 
     gateClosed = 1; // set flag
-    first = false;
 
     // clear counter
-    P2->IFG = 0; // clear flag
 }
 
 void PORT4_IRQHandler(void)
