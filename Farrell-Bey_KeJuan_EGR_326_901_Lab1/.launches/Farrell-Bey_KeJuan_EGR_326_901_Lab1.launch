@@ -4,7 +4,7 @@
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROGRAM.MSP432P401R.ccxml.Texas Instruments XDS110 USB Debug Probe/CORTEX_M4_0" value="${build_artifact:Farrell-Bey_KeJuan_EGR_326_901_Lab1}"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_PROJECT.MSP432P401R.ccxml.Texas Instruments XDS110 USB Debug Probe/CORTEX_M4_0" value="Farrell-Bey_KeJuan_EGR_326_901_Lab1"/>
 <stringAttribute key="com.ti.ccstudio.debug.debugModel.ATTR_TARGET_CONFIG" value="${target_config_active_default:Farrell-Bey_KeJuan_EGR_326_901_Lab1}"/>
-<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.MSP432P401R.ccxml.Texas Instruments XDS110 USB Debug Probe/CORTEX_M4_0" value="C:\Users\KeJuan\Desktop\School\EGR 326\KeJuan_Jonathan_EGR_326\Farrell-Bey_KeJuan_EGR_326_901_Lab1\Debug\Farrell-Bey_KeJuan_EGR_326_901_Lab1.out"/>
+<stringAttribute key="com.ti.ccstudio.debug.debugModel.MRU_PROGRAM.MSP432P401R.ccxml.Texas Instruments XDS110 USB Debug Probe/CORTEX_M4_0" value="C:\Users\KeJuan\Desktop\School\EGR 326\EGR_326_Farrell-Bey_Osburn\Farrell-Bey_KeJuan_EGR_326_901_Lab1\Debug\Farrell-Bey_KeJuan_EGR_326_901_Lab1.out"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
 <listEntry value="/Farrell-Bey_KeJuan_EGR_326_901_Lab1"/>
 </listAttribute>

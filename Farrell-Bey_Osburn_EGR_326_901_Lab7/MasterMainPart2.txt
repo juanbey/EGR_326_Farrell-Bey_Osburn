@@ -34,6 +34,7 @@ void main(void)
 	P1->IFG = 0x00;
 
 	P6->SEL0 |= BIT4 | BIT5;				// P1.6 and P1.7 as UCB0SDA and UCB0SCL	//TODO:change to 6.4 SDA and 6.5 SCL
+	
 	EUSCI_B1->CTLW0 |= EUSCI_B_CTLW0_SWRST; // Hold EUSCI_B1 module in reset state
 	EUSCI_B1->CTLW0 |= EUSCI_B_CTLW0_MODE_3 | EUSCI_B_CTLW0_MST | EUSCI_B_CTLW0_SYNC;
 	EUSCI_B1->CTLW0 |= EUSCI_B_CTLW0_UCSSEL_2; // Select SMCLK as EUSCI_B1 clock

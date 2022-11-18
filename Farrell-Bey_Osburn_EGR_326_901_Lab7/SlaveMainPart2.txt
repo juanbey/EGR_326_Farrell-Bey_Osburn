@@ -29,7 +29,7 @@ void main(void)
     EUSCI_B1->CTLW0 &= ~EUSCI_B_CTLW0_SWRST;  // Clear SWRST to resume operation
     EUSCI_B1->IFG &= ~EUSCI_B_IFG_RXIFG0;     // Clear EUSCI_B1 RX interrupt flag
     EUSCI_B1->IE |= EUSCI_B_IE_RXIE0;         // Enable EUSCI_B1 RX interrupt
-    NVIC->ISER[0] = 1 << ((EUSCIB1_IRQn)&31); // EUSCI_B1 interrupt is enabled in NVIC
+    NVIC->ISER[0] = 1 << ((EUSCIB1_IRQn) & 31); // EUSCI_B1 interrupt is enabled in NVIC
     __enable_irq();                           // All interrupts are enabled
     SCB->SCR |= SCB_SCR_SLEEPONEXIT_Msk;      // Sleep on exit
     __sleep();                                // enter LPM0

@@ -52,7 +52,6 @@ void main(void)
                 key = 0;
             }
 
-            /* code */
         } while (i < yr);
 
         key = Read_Keypad();
