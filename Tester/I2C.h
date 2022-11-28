@@ -14,5 +14,9 @@ int I2C_write(int slaveAddr, unsigned char memAddr, unsigned char* data);
 int I2C_read(int slaveAddr, unsigned char memAddr, unsigned char* data);
 
 void I2C_print(unsigned char *data);
+
+void I2C_initY(void);
+int I2C_WriteY(int slaveAddr, unsigned char memAddr, unsigned char data);
+int I2C_ReadY(int slaveAddr, unsigned char memAddr, unsigned char* data);
 //int I2C_burstwrite(int slaveAddr, unsigned char* memAddr, unsigned char* data);
 //int I2C_burstread(int slaveAddr, unsigned char memAddr, unsigned char* data);

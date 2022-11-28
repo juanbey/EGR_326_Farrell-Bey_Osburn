@@ -35,19 +35,24 @@ void main(void)
 {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD; // stop watchdog timer
     //uint8_t i = 0;
-    //SysTick_Init();
+    SysTick_Init();
     //Button_init();
     I2C_init();
 
 
+
+    I2C_write(EEPROM_SLAVE, 0x02, 0x1);
+
+    I2C_read(EEPROM_SLAVE, 0x02, &data[1]);
+
+    ms_delay(10);
+
+    printf("Value 1: %x\n", data[1]);
+
     while (1)
     {
 
-        I2C_write(EEPROM_SLAVE, 0x00, 0x3);
-
-        I2C_read(EEPROM_SLAVE, 0x02, &data[1]);
-
-        printf("Value 1: %x\n", data[0]);
+        ;
 
     }
 }
