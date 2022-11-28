@@ -1,61 +1,66 @@
 #include "msp.h"
-#include <stdio.h>
-#include <string.h>
-#include "I2C.h"
+#include "motor.h"
 #include "timers.h"
-
-#define MAX 8
+#include "I2C.h"
+// #define ROWS BIT0 | BIT1 | BIT2 | BIT3  //P4.0 - 4.3
+// #define COLS BIT4 | BIT5 | BIT6         //P4.4 - 4.6
 #define BUTTON1 BIT6 // Pin 6 (Button 1)
 #define BUTTON2 BIT7 // Pin 7 (Button 2)
 #define RTC_SLAVE 0b1101000
-#define EEPROM_SLAVE 0b01010001 // A0 of EEPROM
+#define EEPROM_SLAVE 0b1010010 // A1 of EEPROM
+
+/**
+ * main.c
+ */
 
 void Button_init(void);
 uint16_t Button1Press(void);
 uint16_t Button2Press(void);
-// 10ms delay for write
-/**
- * main.c
- */
-volatile entryNum = 0x1;
-volatile currentMem = 0x00;
-unsigned char Date[6][MAX] = {
-    {0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-    {0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-    {0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-    {0x04, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-    {0x05, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-    {0x06, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
-}; // Entry# sec   min    Hr    Day  Date   Mon   Yr
 
-unsigned char data[8] = {0, 0, 0, 0, 0, 0, 0, 0};
+unsigned char newData[8] = {0x11, 0x59, 0x82, 0x07, 0x31, 0x12, 0x22, 0};
+unsigned char data[8] = {0x11, 0x59, 0x12, 0x07, 0x31, 0x12, 0x22, 0};
+//                        sec   min    Hr    Day  Date   Mon   Yr
+unsigned char mem[8] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0};
 
 void main(void)
-
 {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD; // stop watchdog timer
-    //uint8_t i = 0;
-    //SysTick_Init();
-    //Button_init();
-    I2C_init();
 
+    Button_init();
+    I2C_init();
+    //int i;
+
+    SysTick_Init();
 
     while (1)
     {
+        if (Button1Press())
+        {
+            I2C_write(RTC_SLAVE, 0x02, data[2]);
+            I2C_write(EEPROM_SLAVE, 0x02, data[2]);
+            while ((P2->IN & BUTTON2) == 0);
 
-        I2C_write(EEPROM_SLAVE, 0x00, 0x3);
+        }
 
-        I2C_read(EEPROM_SLAVE, 0x02, &data[1]);
+        else if (Button2Press())
+        {
+            I2C_read(RTC_SLAVE,0x02, &newData[2]);
+            I2C_read(EEPROM_SLAVE,0x02, &newData[3]);
+            printf("B2:RTC-hex: %x\n",newData[2]);
+            printf("B2:EEPROM-hex: %x\n",newData[3]);
 
-        printf("Value 1: %x\n", data[0]);
+            printf("data hex: %x\n",data[2]);
 
+            while ((P2->IN & BUTTON2) == 0);
+        }
+
+        else
+        {
+            ;
+        }
     }
 }
 
-/********************************************************************
-This function initalizes pins 6 & 7 on port 2 as input GPIO to recieve
-input from a button switch.
-*********************************************************************/
 void Button_init(void)
 {
     P2->SEL0 &= ~(BUTTON1 | BUTTON2);
