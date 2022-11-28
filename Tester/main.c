@@ -32,6 +32,16 @@ void main(void)
 
     SysTick_Init();
 
+    SysTick_Init();
+
+    I2C_write(EEPROM_SLAVE, 0x02, 0x1);
+
+    I2C_read(EEPROM_SLAVE, 0x02, &data[1]);
+
+    ms_delay(10);
+
+    printf("Value 1: %x\n", data[1]);
+
     while (1)
     {
         if (Button1Press())
