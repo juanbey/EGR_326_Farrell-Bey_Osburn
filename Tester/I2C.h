@@ -10,7 +10,8 @@
 
 void I2C_init(void);
 
-int I2C_write(int slaveAddr, unsigned char memAddr, unsigned char data);
+void I2C_write(int slaveAddr, unsigned char memAddr, unsigned char* data);
+// void I2C_write(int slaveAddr, unsigned char memAddr, unsigned char data);
 void I2C_read(int slaveAddr, unsigned char memAddr, unsigned char* data);
 
 void I2C_print(unsigned char *data);

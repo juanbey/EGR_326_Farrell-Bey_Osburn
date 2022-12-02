@@ -3,48 +3,48 @@
 
 
 void I2C_init(void){
-    EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_SWRST;     //Enable Reset State (0x0001) P3.5/6
+    EUSCI_B1->CTLW0 |= EUSCI_B_CTLW0_SWRST;     //Enable Reset State (0x0001) P3.5/6
 
-    EUSCI_B0->CTLW0 |= (EUSCI_B_CTLW0_SWRST     //Enable Reset State
-                    | EUSCI_B_CTLW0_SSEL__SMCLK // SM clk
+    EUSCI_B1->CTLW0 |= (EUSCI_B_CTLW0_SWRST     //Enable Reset State
+                    | EUSCI_B_CTLW0_SSEL__SMCLK // SMclk
                     | EUSCI_B_CTLW0_SYNC        // synch mode
                     | EUSCI_B_CTLW0_MODE_3      //I2C mode
                     | EUSCI_B_CTLW0_MST);       // master mode
 
-    EUSCI_B0->BRW = 30; //Prescalar
+    EUSCI_B1->BRW = 30; //Prescalar originally set to 30
 
-    P1->SEL0 |= (SCL | SDA);                    // setup pins
-    P1->SEL1 &= ~(SCL | SDA);
+    P6->SEL0 |= (SCL | SDA);                    // setup pins
+    P6->SEL1 &= ~(SCL | SDA);
 
-    EUSCI_B0->CTLW0 &= ~EUSCI_B_CTLW0_SWRST;    //Enable Reset State (0x0001) P3.5/6
+    EUSCI_B1->CTLW0 &= ~EUSCI_B_CTLW0_SWRST;    //Enable Reset State (0x0001) P3.5/6
 }
 
 
-int I2C_write(int slaveAddr, unsigned char memAddr, unsigned char data){
-    SysTick_Init();
+void I2C_write(int slaveAddr, unsigned char memAddr, unsigned char* data){
+    EUSCI_B1->I2CSA = slaveAddr;            // setup slave address
+    EUSCI_B1->CTLW0 |= EUSCI_B_CTLW0_TR;    // Enable transmitter
+    EUSCI_B1->CTLW0 |= EUSCI_B_CTLW0_TXSTT; // generate START and send slave address
 
-    EUSCI_B0->I2CSA = slaveAddr;            // setup slave address
-    EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_TR;    // Enable transmitter
-    EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_TXSTT; // generate START and send slave address
+    //while(!(EUSCI_B1->IFG & 2));          // Wait till 'it' is ready to trasmit
+    while(EUSCI_B1->CTLW0 & 2);         // Wait till start is done
 
-    while(!(EUSCI_B0->IFG & 2));          // Wait until start is done
+    EUSCI_B1->TXBUF = memAddr;              // Send memory address to slave
 
-    EUSCI_B0->TXBUF = memAddr;              // Send memory address to slave
+    while(!(EUSCI_B1->IFG & 2));            // Wait till 'it' is ready to trasmit
 
-    while(!(EUSCI_B0->IFG & 2));            // Wait until data is ready to trasmit
+    EUSCI_B1->TXBUF = *data;                 // Send data to slave
 
-    EUSCI_B0->TXBUF = data;                 // Send data to slave
-    ms_delay(20);
+    while(!(EUSCI_B1->IFG & 2));            // Wait till last transmit is done
 
-    while(!(EUSCI_B0->IFG & 2));            // Wait until last transmit is done
+    EUSCI_B1->CTLW0 |= EUSCI_B_CTLW0_TXSTP; // Send STOP
 
-    EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_TXSTP; // Send STOP
+    while(EUSCI_B1->CTLW0 & 4);         // Wait till last transmit is done
 
     return 0;                               // no error
 }
 
 
-int I2C_read(int slaveAddr, unsigned char memAddr, unsigned char* data){
+void I2C_read(int slaveAddr, unsigned char memAddr, unsigned char* data){
 
     EUSCI_B1->I2CSA = slaveAddr;                // setup slave address
     EUSCI_B1->CTLW0 |= EUSCI_B_CTLW0_TR;        // Enable transmitter
@@ -54,49 +54,22 @@ int I2C_read(int slaveAddr, unsigned char memAddr, unsigned char* data){
 
     EUSCI_B1->TXBUF = memAddr;              //Send memory address to slave
 
-    while(!(EUSCI_B1->IFG & 2));            //Wait till 'it' is ready to trasmit
-
+    // while(!(EUSCI_B1->IFG & 2));            //Wait till 'it' is ready to trasmit
+    while(EUSCI_B1->CTLW0 & 2);         // Wait till start is done
     EUSCI_B1->CTLW0 &= ~EUSCI_B_CTLW0_TR;   // Enable reciver
     EUSCI_B1->CTLW0 |= EUSCI_B_CTLW0_TXSTT; // Generate RESTART and send slave address
 
     while(EUSCI_B1->CTLW0 & 2);         // Wait till 'restart' is ready to trasmit
 
-    EUSCI_B1->CTLW0 |= EUSCI_B_CTLW0_TXSTP; // Send STOP
+    EUSCI_B1->CTLW0 |= EUSCI_B_CTLW0_TXSTP; // setup to Send STOP after byte is recieved
 
-    while(!(EUSCI_B1->IFG & 1));            // Wait till last recieve is done
+    // while(!(EUSCI_B1->IFG & 1));            // Wait till last recieve is done
+    while(EUSCI_B1->CTLW0 & 1);         // Wait till 'restart' is ready to trasmit
 
     *data = EUSCI_B1->RXBUF;
 
     while(EUSCI_B1->CTLW0 & 4);         // Wait until STOP is sent
     return 0;
-
-}
-
-
-void I2C_read(int slaveAddr, unsigned char memAddr, unsigned char* data){
-
-    EUSCI_B0->I2CSA = slaveAddr;                // setup slave address
-    EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_TR;        // Enable transmitter
-    EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_TXSTT;     // generate START and send slave address
-
-    while(EUSCI_B0->CTLW0 & 2);         // Wait till start is done
-
-    EUSCI_B0->TXBUF = memAddr;              //Send memory address to slave
-
-    while(!(EUSCI_B0->IFG & 2));            //Wait till 'it' is ready to trasmit
-
-    EUSCI_B0->CTLW0 &= ~EUSCI_B_CTLW0_TR;   // Enable reciver
-    EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_TXSTT; // Generate RESTART and send slave address
-
-    while(EUSCI_B0->CTLW0 & 2);         // Wait till 'restart' is ready to trasmit
-
-    EUSCI_B0->CTLW0 |= EUSCI_B_CTLW0_TXSTP; // Send STOP
-
-    while(!(EUSCI_B0->IFG & 1));            // Wait till last recieve is done
-
-    *data = EUSCI_B0->RXBUF;
-
-    while(EUSCI_B0->CTLW0 & 4);         // Wait until STOP is sent
 }
 
 void I2C_print(unsigned char *data){

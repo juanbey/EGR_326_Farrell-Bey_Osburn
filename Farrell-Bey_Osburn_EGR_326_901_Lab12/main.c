@@ -41,6 +41,8 @@ void main(void)
 	TimerA_init();      // initialize PWM for LED
 	Port_init();        // Initialize ports
 
+	ST7735_SetRotation(2);
+
 	ST7735_FillScreen(ST7735_BLACK);    // set screen to black
     ST7735_SetTextColor(ST7735_WHITE);  // set text color to white
     Output_Clear();                     // clear LCD to start
@@ -56,52 +58,52 @@ void main(void)
 
         // change LCD and PWM based of of voltage from photodiode
 
-        if((result >= 1500*0) && (result < 1500*1))
+        if((result >= 1500*0 + 100) && (result < 1500*1 + 100))
         {
             dutyCycle = 76;
             intensity = 10;
         }
-        else if((result >= 1500*1) && (result < 1500*2))
+        else if((result >= 1500*1 + 100) && (result < 1500*2 + 100))
         {
             dutyCycle = 70;
             intensity = 9;
         }
-        else if((result >= 1500*2) && (result < 1500*3))
+        else if((result >= 1500*2 + 100) && (result < 1500*3 + 100))
         {
             dutyCycle = 63;
             intensity = 8;
         }
-        else if((result >= 1500*3) && (result < 1500*4))
+        else if((result >= 1500*3 + 100) && (result < 1500*4 + 100))
         {
             dutyCycle = 56;
             intensity = 7;
         }
-        else if((result >= 1500*4) && (result < 1500*5))
+        else if((result >= 1500*4 + 100) && (result < 1500*5 + 100))
         {
             dutyCycle = 49;
             intensity = 6;
         }
-        else if((result >= 1500*5) && (result < 1500*6))
+        else if((result >= 1500*5 + 100) && (result < 1500*6 + 100))
         {
             dutyCycle = 42;
             intensity = 5;
         }
-        else if((result >= 1500*6) && (result < 1500*7))
+        else if((result >= 1500*6 + 100) && (result < 1500*7 + 100))
         {
             dutyCycle = 35;
             intensity = 4;
         }
-        else if((result >= 1500*7) && (result < 1500*8))
+        else if((result >= 1500*7 + 100) && (result < 1500*8 + 100))
         {
             dutyCycle = 28;
             intensity = 3;
         }
-        else if((result >= 1500*8) && (result < 1500*9))
+        else if((result >= 1500*8 + 100) && (result < 1500*9 + 100))
         {
             dutyCycle = 21;
             intensity = 2;
         }
-        else if((result >= 1500*9) && (result < 1500*10))
+        else if((result >= 1500*9 + 100) && (result < 1500*10 + 100))
         {
             dutyCycle = 14;
             intensity = 1;

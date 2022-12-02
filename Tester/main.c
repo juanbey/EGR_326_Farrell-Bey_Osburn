@@ -26,6 +26,10 @@ void main(void)
 {
     WDT_A->CTL = WDT_A_CTL_PW | WDT_A_CTL_HOLD; // stop watchdog timer
 
+//    CS->KEY = CS_KEY_VAL; // Unlock CS module for register access
+//    CS->CTL1 = CS->CTL1 | CS_CTL1_DIVS_7; // change the SMCLK clock speed to 12 MHz.
+//    CS->KEY = 0; // Lock CS module from unintended accesses
+
     Button_init();
     I2C_init();
     //int i;
@@ -34,9 +38,9 @@ void main(void)
 
     SysTick_Init();
 
-    I2C_write(EEPROM_SLAVE, 0x02, 0x1);
+    // I2C_write(EEPROM_SLAVE, 0x02, 0x1);
 
-    I2C_read(EEPROM_SLAVE, 0x02, &data[1]);
+    // I2C_read(EEPROM_SLAVE, 0x02, &data[1]);
 
     ms_delay(10);
 
@@ -47,7 +51,7 @@ void main(void)
         if (Button1Press())
         {
             I2C_write(RTC_SLAVE, 0x02, data[2]);
-            I2C_write(EEPROM_SLAVE, 0x02, data[2]);
+            // I2C_write(EEPROM_SLAVE, 0x02, data[2]);
             while ((P2->IN & BUTTON2) == 0);
 
         }
@@ -55,7 +59,7 @@ void main(void)
         else if (Button2Press())
         {
             I2C_read(RTC_SLAVE,0x02, &newData[2]);
-            I2C_read(EEPROM_SLAVE,0x02, &newData[3]);
+            // I2C_read(EEPROM_SLAVE,0x02, &newData[3]);
             printf("B2:RTC-hex: %x\n",newData[2]);
             printf("B2:EEPROM-hex: %x\n",newData[3]);
 
