@@ -145,7 +145,7 @@ void Port_init(void){
 void adcsetup(void)
 {
 ADC14->CTL0 = 0x00000010; 	//power on and disabled during configuration
-ADC14->CTL0 |= 0x04D80300; 	// S/H pulse mode, MCLCK, 32 sample clocks,
+ADC14->CTL0 |= 0x04D80300; 	// Sample-and-Hold pulse mode, MCLCK, 32 sample clocks,
 							//sw trigger, /4 clock divide
 ADC14->CTL1 = 0x00000030; 	// 14-bit resolution
 ADC14->MCTL[5] = 0; 		// A0 input, single ended, vref=avcc
